@@ -1,0 +1,3 @@
+- Native NeoForge 1.21.1 port of 3.8.3. Forgified Fabric API is no longer required.
+- Fixed thrust speed calculation ignoring player and thrust direction. (Thanks @Octol1ttle)
+- Fixed NeoForge permission nodes being ignored when resolving `ignore_config` / `configure`.
