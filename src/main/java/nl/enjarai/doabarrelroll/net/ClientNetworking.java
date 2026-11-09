@@ -1,11 +1,11 @@
 package nl.enjarai.doabarrelroll.net;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.util.Mth;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import nl.enjarai.doabarrelroll.api.RollEntity;
 import nl.enjarai.doabarrelroll.api.event.ClientEvents;
@@ -33,19 +33,19 @@ public class ClientNetworking {
     static void onRollSync(RollSyncS2CPacket payload) {
         if (!HANDSHAKE_CLIENT.hasConnected()) return;
 
-        var client = MinecraftClient.getInstance();
-        if (client.world == null) {
+        var client = Minecraft.getInstance();
+        if (client.level == null) {
             return;
         }
 
-        var entity = client.world.getEntityById(payload.entityId());
+        var entity = client.level.getEntity(payload.entityId());
         if (entity == null) {
             return;
         }
         var rollEntity = (RollEntity) entity;
 
         rollEntity.doABarrelRoll$setRolling(payload.rolling());
-        rollEntity.doABarrelRoll$setRoll(MathHelper.wrapDegrees(payload.roll()));
+        rollEntity.doABarrelRoll$setRoll(Mth.wrapDegrees(payload.roll()));
     }
 
     static void onConfigUpdateAck(ConfigUpdateAckS2CPacket payload) {
@@ -54,10 +54,10 @@ public class ClientNetworking {
         CONFIG_UPDATE_CLIENT.updateAcknowledged(payload);
     }
 
-    private static void send(CustomPayload payload) {
-        var handler = MinecraftClient.getInstance().getNetworkHandler();
-        if (handler != null && handler.hasChannel(payload.getId())) {
-            PacketDistributor.sendToServer(payload);
+    private static void send(CustomPacketPayload payload) {
+        var connection = Minecraft.getInstance().getConnection();
+        if (connection != null && connection.hasChannel(payload)) {
+            ClientPacketDistributor.sendToServer(payload);
         }
     }
 

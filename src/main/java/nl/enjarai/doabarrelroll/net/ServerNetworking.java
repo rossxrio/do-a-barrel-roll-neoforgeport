@@ -1,10 +1,10 @@
 package nl.enjarai.doabarrelroll.net;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.common.NeoForge;
@@ -34,14 +34,14 @@ public class ServerNetworking {
         // The initial handshake is sent in the CommandManagerMixin.
 
         ServerEvents.SERVER_CONFIG_UPDATE.register((server, config) -> {
-            for (var player : server.getPlayerManager().getPlayerList()) {
+            for (var player : server.getPlayerList().getPlayers()) {
                 sendHandshake(player);
             }
         });
 
         NeoForge.EVENT_BUS.addListener(PlayerEvent.PlayerLoggedOutEvent.class, event -> {
-            if (event.getEntity() instanceof ServerPlayerEntity player) {
-                HANDSHAKE_SERVER.playerDisconnected(player.networkHandler);
+            if (event.getEntity() instanceof ServerPlayer player) {
+                HANDSHAKE_SERVER.playerDisconnected(player.connection);
             }
         });
         NeoForge.EVENT_BUS.addListener(ServerTickEvent.Post.class, event -> HANDSHAKE_SERVER.tick(event.getServer()));
@@ -62,14 +62,14 @@ public class ServerNetworking {
         registrar.playToClient(RollSyncS2CPacket.PACKET_ID, RollSyncS2CPacket.PACKET_CODEC, (payload, context) -> ClientNetworking.onRollSync(payload));
     }
 
-    private static boolean isAccepted(ServerPlayerEntity player) {
+    private static boolean isAccepted(ServerPlayer player) {
         return HANDSHAKE_SERVER.getHandshakeState(player).state == HandshakeServer.HandshakeState.ACCEPTED;
     }
 
     private static void onConfigResponse(ConfigResponseC2SPacket payload, IPayloadContext context) {
-        if (!(context.player() instanceof ServerPlayerEntity player)) return;
+        if (!(context.player() instanceof ServerPlayer player)) return;
 
-        var reply = HANDSHAKE_SERVER.clientReplied(player.networkHandler, payload);
+        var reply = HANDSHAKE_SERVER.clientReplied(player.connection, payload);
         if (reply == HandshakeServer.HandshakeState.RESEND) {
             // Resending can happen when the client has a different protocol version than expected.
             sendHandshake(player);
@@ -77,38 +77,38 @@ public class ServerNetworking {
     }
 
     private static void onRollSync(RollSyncC2SPacket payload, IPayloadContext context) {
-        if (!(context.player() instanceof ServerPlayerEntity player) || !isAccepted(player)) return;
+        if (!(context.player() instanceof ServerPlayer player) || !isAccepted(player)) return;
 
         var rollPlayer = (RollEntity) player;
         var isRolling = payload.rolling();
         var roll = payload.roll();
 
         rollPlayer.doABarrelRoll$setRolling(isRolling);
-        rollPlayer.doABarrelRoll$setRoll(isRolling ? MathHelper.wrapDegrees(roll) : 0);
+        rollPlayer.doABarrelRoll$setRoll(isRolling ? Mth.wrapDegrees(roll) : 0);
     }
 
     private static void onConfigUpdate(ConfigUpdateC2SPacket payload, IPayloadContext context) {
-        if (!(context.player() instanceof ServerPlayerEntity player) || !isAccepted(player)) return;
+        if (!(context.player() instanceof ServerPlayer player) || !isAccepted(player)) return;
 
         context.reply(CONFIG_HOLDER.clientSendsUpdate(player, payload));
     }
 
-    private static boolean canReceive(ServerPlayerEntity player, CustomPayload payload) {
-        return player.networkHandler.hasChannel(payload.getId());
+    private static boolean canReceive(ServerPlayer player, CustomPacketPayload payload) {
+        return player.connection.hasChannel(payload);
     }
 
-    public static void sendHandshake(ServerPlayerEntity player) {
-        var payload = HANDSHAKE_SERVER.initiateConfigSync(player.networkHandler);
+    public static void sendHandshake(ServerPlayer player) {
+        var payload = HANDSHAKE_SERVER.initiateConfigSync(player.connection);
         // Vanilla clients haven't negotiated our channel, NeoForge refuses to send to them.
         // We still mark the config as sent so the forceInstalled timeout can kick them.
         if (canReceive(player, payload)) {
             PacketDistributor.sendToPlayer(player, payload);
         }
-        HANDSHAKE_SERVER.configSentToClient(player.networkHandler);
+        HANDSHAKE_SERVER.configSentToClient(player.connection);
     }
 
     public static void sendRollUpdates(Entity entity) {
-        if (!(entity.getWorld() instanceof ServerWorld world)) return;
+        if (!(entity.level() instanceof ServerLevel level)) return;
 
         var rollEntity = (RollEntity) entity;
         var isRolling = rollEntity.doABarrelRoll$isRolling();
@@ -116,7 +116,7 @@ public class ServerNetworking {
 
         var payload = new RollSyncS2CPacket(entity.getId(), isRolling, roll);
 
-        world.getChunkManager().chunkLoadingManager.getPlayersWatchingChunk(entity.getChunkPos(), false).stream()
+        level.getChunkSource().chunkMap.getPlayersWatching(entity).stream()
                 .filter(player -> player != entity)
                 .filter(ServerNetworking::isAccepted)
                 .forEach(player -> PacketDistributor.sendToPlayer(player, payload));
