@@ -19,6 +19,10 @@ repositories {
     maven("https://maven.isxander.dev/releases") {
         content { includeGroup("dev.isxander") }
     }
+    // YACL's transitive JSON parser libraries (jar-in-jar in production, needed for the dev runtime).
+    maven("https://maven.quiltmc.org/repository/release/") {
+        content { includeGroup("org.quiltmc.parsers") }
+    }
     mavenCentral()
 }
 
