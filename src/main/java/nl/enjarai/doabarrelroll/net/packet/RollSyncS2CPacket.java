@@ -7,7 +7,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import nl.enjarai.doabarrelroll.DoABarrelRoll;
 
 public record RollSyncS2CPacket(int entityId, boolean rolling, float roll) implements CustomPacketPayload {
-    public static final Type<RollSyncS2CPacket> PACKET_ID = new Type<>(DoABarrelRoll.id("roll_sync"));
+    public static final Type<RollSyncS2CPacket> PACKET_ID = new Type<>(DoABarrelRoll.id("roll_sync_s2c")); // NeoForge payload ids must be unique across directions.
     public static final StreamCodec<ByteBuf, RollSyncS2CPacket> PACKET_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT, RollSyncS2CPacket::entityId,
             ByteBufCodecs.BOOL, RollSyncS2CPacket::rolling,
