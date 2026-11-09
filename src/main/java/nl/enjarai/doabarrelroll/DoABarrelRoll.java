@@ -1,9 +1,9 @@
 package nl.enjarai.doabarrelroll;
 
 import io.netty.buffer.Unpooled;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.neoforged.bus.api.IEventBus;
 import nl.enjarai.doabarrelroll.net.ServerNetworking;
 import nl.enjarai.doabarrelroll.util.ModPermissions;
@@ -19,18 +19,18 @@ public class DoABarrelRoll {
     public static final Identifier ROLL_CHANNEL = id("player_roll");
 
     public static Identifier id(String path) {
-        return Identifier.of(MODID, path);
+        return Identifier.fromNamespaceAndPath(MODID, path);
     }
 
     public static void init(IEventBus modBus) {
         ServerNetworking.init(modBus);
     }
 
-    public static PacketByteBuf createBuf() {
-        return new PacketByteBuf(Unpooled.buffer());
+    public static FriendlyByteBuf createBuf() {
+        return new FriendlyByteBuf(Unpooled.buffer());
     }
 
-    public static boolean checkPermission(ServerPlayNetworkHandler handler, String permission, int operatorLevel) {
+    public static boolean checkPermission(ServerGamePacketListenerImpl handler, String permission, int operatorLevel) {
         return ModPermissions.resolve(handler.getPlayer(), permission, operatorLevel);
     }
 }

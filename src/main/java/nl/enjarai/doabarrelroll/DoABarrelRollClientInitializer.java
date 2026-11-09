@@ -13,8 +13,12 @@ public class DoABarrelRollClientInitializer {
     public DoABarrelRollClientInitializer(IEventBus modBus, ModContainer container) {
         DoABarrelRollClient.init();
 
-        modBus.addListener(RegisterKeyMappingsEvent.class, event -> ModKeybindings.ALL.forEach(event::register));
+        modBus.addListener(RegisterKeyMappingsEvent.class, event -> {
+            event.registerCategory(ModKeybindings.CATEGORY);
+            ModKeybindings.ALL.forEach(event::register);
+        });
 
+        // ModConfigScreen falls back to a "YACL missing" prompt when YACL isn't installed.
         container.registerExtensionPoint(
                 IConfigScreenFactory.class,
                 (mod, parent) -> ModConfigScreen.create(parent)

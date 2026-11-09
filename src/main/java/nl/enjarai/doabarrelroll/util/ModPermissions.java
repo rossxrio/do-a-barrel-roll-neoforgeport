@@ -1,6 +1,8 @@
 package nl.enjarai.doabarrelroll.util;
 
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.Permission;
+import net.minecraft.server.permissions.PermissionLevel;
 import net.neoforged.neoforge.server.permission.PermissionAPI;
 import net.neoforged.neoforge.server.permission.nodes.PermissionDynamicContext;
 import net.neoforged.neoforge.server.permission.nodes.PermissionDynamicContextKey;
@@ -13,6 +15,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * NeoForge permission nodes for the server-side checks. Permission handlers (e.g. LuckPerms) can grant
+ * {@code do_a_barrel_roll.ignore_config} / {@code do_a_barrel_roll.configure}; without one, the node
+ * falls back to the vanilla operator level passed by the caller.
+ */
 public class ModPermissions {
     public static final PermissionDynamicContextKey<Integer> DEFAULT_PERMISSION_LEVEL_CONTEXT = new PermissionDynamicContextKey<>(
             Integer.class, "default_permission_level", Objects::toString);
@@ -26,32 +33,27 @@ public class ModPermissions {
 
     public static final List<PermissionNode<Boolean>> NODES = List.of(IGNORE_CONFIG_NODE, CONFIGURE_NODE);
 
-    public static boolean resolve(ServerPlayerEntity player, String permission, int defaultPermissionLevel) {
+    public static boolean resolve(ServerPlayer player, String permission, int defaultPermissionLevel) {
         for (var node : NODES) {
             if (node.getNodeName().equals(permission)) {
                 return PermissionAPI.getPermission(player, node, DEFAULT_PERMISSION_LEVEL_CONTEXT.createContext(defaultPermissionLevel));
             }
         }
-        return player.hasPermissionLevel(defaultPermissionLevel);
+        return hasPermissionLevel(player, defaultPermissionLevel);
     }
 
-    private static boolean defaultResolve(@Nullable ServerPlayerEntity player, UUID playerUUID, PermissionDynamicContext<?>... context) {
+    public static boolean hasPermissionLevel(ServerPlayer player, int level) {
+        return player.permissions().hasPermission(new Permission.HasCommandLevel(PermissionLevel.byId(level)));
+    }
+
+    private static boolean defaultResolve(@Nullable ServerPlayer player, UUID playerUUID, PermissionDynamicContext<?>... context) {
         if (player != null) {
             for (var key : context) {
                 if (key.getDynamic() == DEFAULT_PERMISSION_LEVEL_CONTEXT) {
-                    return player.hasPermissionLevel((int) key.getValue());
+                    return hasPermissionLevel(player, (int) key.getValue());
                 }
             }
         }
         return false;
     }
-
-//    private static PermissionNode.PermissionResolver<Boolean> defaultResolve(int defaultPermissionLevel) {
-//        return (player, playerUUID, context) -> {
-//            if (player != null) {
-//                return player.hasPermissionLevel(defaultPermissionLevel);
-//            }
-//            return false;
-//        };
-//    }
 }
