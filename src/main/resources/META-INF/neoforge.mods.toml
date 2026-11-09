@@ -16,7 +16,7 @@ Microsoft flight simulator for Minecraft elytras.
 
 Unofficial native NeoForge port of enjarai's Do a Barrel Roll.
 '''
-logoFile = "assets/do_a_barrel_roll/icon.png"
+iconFile = "assets/do_a_barrel_roll/icon.png"
 
 [[mixins]]
 config = "do_a_barrel_roll.mixins.json"
