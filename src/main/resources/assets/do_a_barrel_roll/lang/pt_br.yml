@@ -67,3 +67,6 @@ key.do_a_barrel_roll:
   toggle_enabled: Alternar ativado
   toggle_enabled.enable: §aHabilitado §rDo a Barrel Roll
   toggle_enabled.disable: §cDesativado §rDo a Barrel Roll
+
+# Key mapping category label (KeyMapping.Category uses key.category.<namespace>.<path> since 1.21.9)
+key.category.do_a_barrel_roll.do_a_barrel_roll: Do a Barrel Roll

@@ -1,6 +1,7 @@
 {
     "pack": {
         "description": "Do a Barrel Roll",
-        "pack_format": 34
+        "min_format": [97, 0],
+        "max_format": [121, 0]
     }
 }

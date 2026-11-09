@@ -318,3 +318,5 @@ controlify:
     roll_right: Roll Right
     thrust_forward: Thrust Forward
     thrust_backward: Thrust Backward
+# Key mapping category label (KeyMapping.Category uses key.category.<namespace>.<path> since 1.21.9)
+key.category.do_a_barrel_roll.do_a_barrel_roll: Do a Barrel Roll
