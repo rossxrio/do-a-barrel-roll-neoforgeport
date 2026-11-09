@@ -1,6 +1,6 @@
 package nl.enjarai.doabarrelroll.mixin;
 
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.world.entity.LivingEntity;
 import nl.enjarai.doabarrelroll.net.ServerNetworking;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -10,16 +10,9 @@ import org.spongepowered.asm.mixin.injection.Slice;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
     @ModifyVariable(
-            method = "travel",
-            slice = @Slice(
-                    from = @At(
-                            value = "INVOKE",
-                            target = "Lnet/minecraft/util/math/Vec3d;horizontalLength()D",
-                            ordinal = 1
-                    )
-            ),
+            method = "handleFallFlyingCollisions",
             at = @At("STORE"),
-            index = 21,
+            index = 7,
             require = 0 // We let this mixin fail if it needs to as a temporary workaround to be compatible with Connector.
     )
     private float doABarrelRoll$modifyKineticDamage(float original) {

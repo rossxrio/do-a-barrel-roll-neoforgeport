@@ -1,12 +1,12 @@
 package nl.enjarai.doabarrelroll.impl.event;
 
-import net.minecraft.util.Identifier;
 import nl.enjarai.doabarrelroll.api.event.RollEvents;
 import nl.enjarai.doabarrelroll.api.event.RollGroup;
 import nl.enjarai.doabarrelroll.api.event.TriState;
 
 import java.util.HashMap;
 import java.util.function.Supplier;
+import net.minecraft.resources.Identifier;
 
 public class RollGroupImpl extends EventImpl<RollGroup.RollCondition> implements RollGroup {
     public static final HashMap<Identifier, RollGroup> instances = new HashMap<>();

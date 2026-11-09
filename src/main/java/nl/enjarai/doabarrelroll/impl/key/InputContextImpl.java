@@ -1,9 +1,7 @@
 package nl.enjarai.doabarrelroll.impl.key;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.util.Identifier;
 import nl.enjarai.doabarrelroll.api.key.InputContext;
 import nl.enjarai.doabarrelroll.mixin.client.key.KeyBindingAccessor;
 import nl.enjarai.doabarrelroll.util.key.ContextualKeyBinding;
@@ -13,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.resources.Identifier;
 
 public final class InputContextImpl implements InputContext {
     private static final List<InputContextImpl> CONTEXTS = new ReferenceArrayList<>();
@@ -21,7 +21,7 @@ public final class InputContextImpl implements InputContext {
         return CONTEXTS;
     }
 
-    public static boolean contextsContain(KeyBinding binding) {
+    public static boolean contextsContain(KeyMapping binding) {
         for (var context : InputContextImpl.getContexts()) {
             if (context.getKeyBindings().contains(binding)) {
                 return true;
@@ -33,8 +33,8 @@ public final class InputContextImpl implements InputContext {
 
     private final Identifier id;
     private final Supplier<Boolean> activeCondition;
-    private final List<KeyBinding> keyBindings = new ReferenceArrayList<>();
-    private final Map<InputUtil.Key, KeyBinding> bindingsByKey = new HashMap<>();
+    private final List<KeyMapping> keyBindings = new ReferenceArrayList<>();
+    private final Map<InputConstants.Key, KeyMapping> bindingsByKey = new HashMap<>();
     private boolean active;
 
     public InputContextImpl(Identifier id, Supplier<Boolean> activeCondition) {
@@ -47,7 +47,7 @@ public final class InputContextImpl implements InputContext {
         boolean active = activeCondition.get();
         if (active != this.active) {
             this.active = active;
-            KeyBinding.updatePressedStates();
+            KeyMapping.setAll();
         }
     }
 
@@ -62,27 +62,27 @@ public final class InputContextImpl implements InputContext {
     }
 
     @Override
-    public void addKeyBinding(KeyBinding keyBinding) {
+    public void addKeyBinding(KeyMapping keyBinding) {
         Objects.requireNonNull(keyBinding);
         keyBindings.add(keyBinding);
         ((ContextualKeyBinding) keyBinding).doABarrelRoll$addToContext(this);
     }
 
     @Override
-    public List<KeyBinding> getKeyBindings() {
+    public List<KeyMapping> getKeyBindings() {
         return keyBindings;
     }
 
     @Override
-    public KeyBinding getKeyBinding(InputUtil.Key key) {
+    public KeyMapping getKeyBinding(InputConstants.Key key) {
         return bindingsByKey.get(key);
     }
 
     @Override
     public void updateKeysByCode() {
         bindingsByKey.clear();
-        for (KeyBinding keyBinding : keyBindings) {
-            bindingsByKey.put(((KeyBindingAccessor) keyBinding).getBoundKey(), keyBinding);
+        for (KeyMapping keyBinding : keyBindings) {
+            bindingsByKey.put(((KeyBindingAccessor) keyBinding).getKey(), keyBinding);
         }
     }
 }

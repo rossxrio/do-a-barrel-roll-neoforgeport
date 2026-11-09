@@ -1,9 +1,9 @@
 package nl.enjarai.doabarrelroll.api.event;
 
-import net.minecraft.util.Identifier;
 import nl.enjarai.doabarrelroll.impl.event.RollGroupImpl;
 
 import java.util.function.Supplier;
+import net.minecraft.resources.Identifier;
 
 /**
  * A group of conditions that determine whether the camera should be rolling and what effects should be applied.

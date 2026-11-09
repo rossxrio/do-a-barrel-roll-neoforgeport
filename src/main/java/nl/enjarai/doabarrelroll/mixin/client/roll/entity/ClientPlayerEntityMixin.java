@@ -1,6 +1,6 @@
 package nl.enjarai.doabarrelroll.mixin.client.roll.entity;
 
-import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.player.LocalPlayer;
 import nl.enjarai.doabarrelroll.api.event.RollContext;
 import nl.enjarai.doabarrelroll.api.event.RollEvents;
 import nl.enjarai.doabarrelroll.api.rotation.RotationInstant;
@@ -17,10 +17,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ClientPlayerEntity.class)
+@Mixin(LocalPlayer.class)
 public abstract class ClientPlayerEntityMixin extends PlayerEntityMixin {
-	@Shadow public float renderYaw;
-	@Shadow public float lastRenderYaw;
+	@Shadow public float yBob;
+	@Shadow public float yBobO;
 
 	@Unique
 	private boolean lastSentIsRolling;
@@ -28,7 +28,7 @@ public abstract class ClientPlayerEntityMixin extends PlayerEntityMixin {
 	private float lastSentRoll;
 
 	@Inject(
-			method = "sendMovementPackets",
+			method = "sendPosition",
 			at = @At("TAIL")
 	)
 	private void doABarrelRoll$sendRollPacket(CallbackInfo ci) {
@@ -54,8 +54,8 @@ public abstract class ClientPlayerEntityMixin extends PlayerEntityMixin {
 		var rotDelta = RotationInstant.of(pitch, yaw, roll);
 		var currentRoll = doABarrelRoll$getRoll();
 		var currentRotation = RotationInstant.of(
-				getPitch(),
-				getYaw(),
+				getXRot(),
+				getYRot(),
 				currentRoll
 		);
 		var context = RollContext.of(currentRotation, rotDelta, mouseDelta);
@@ -75,12 +75,12 @@ public abstract class ClientPlayerEntityMixin extends PlayerEntityMixin {
 
 	@Override
 	public void doABarrelRoll$changeElytraLook(float pitch, float yaw, float roll) {
-		var currentPitch = getPitch();
-		var currentYaw = getYaw();
+		var currentPitch = getXRot();
+		var currentYaw = getYRot();
 		var currentRoll = doABarrelRoll$getRoll();
 
 		// Convert pitch, yaw, and roll to a facing and left vector
-		var facing = new Vector3d(getRotationVecClient().toVector3f());
+		var facing = new Vector3d(getForward().toVector3f());
 		var left = new Vector3d(1, 0, 0);
 		left.rotateZ(-currentRoll * MagicNumbers.TORAD);
 		left.rotateX(-currentPitch * MagicNumbers.TORAD);
@@ -112,19 +112,19 @@ public abstract class ClientPlayerEntityMixin extends PlayerEntityMixin {
 		double deltaRoll = newRoll - currentRoll;
 
 		// Apply vanilla pitch and yaw
-		changeLookDirection(deltaX / 0.15, deltaY / 0.15);
+		turn(deltaX / 0.15, deltaY / 0.15);
 
 		// Apply roll
 		this.roll += (float) deltaRoll;
 		this.prevRoll += (float) deltaRoll;
 
 		// fix hand spasm when wrapping yaw value
-		if (getYaw() < -90 && renderYaw > 90) {
-			renderYaw -= 360;
-			lastRenderYaw -= 360;
-		} else if (getYaw() > 90 && renderYaw < -90) {
-			renderYaw += 360;
-			lastRenderYaw += 360;
+		if (getYRot() < -90 && yBob > 90) {
+			yBob -= 360;
+			yBobO -= 360;
+		} else if (getYRot() > 90 && yBob < -90) {
+			yBob += 360;
+			yBobO += 360;
 		}
 	}
 }

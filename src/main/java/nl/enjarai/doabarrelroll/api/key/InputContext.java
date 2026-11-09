@@ -1,12 +1,11 @@
 package nl.enjarai.doabarrelroll.api.key;
 
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.util.Identifier;
 import nl.enjarai.doabarrelroll.impl.key.InputContextImpl;
-
+import com.mojang.blaze3d.platform.InputConstants;
 import java.util.List;
 import java.util.function.Supplier;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.resources.Identifier;
 
 public interface InputContext {
     static InputContext of(Identifier id, Supplier<Boolean> activeCondition) {
@@ -17,11 +16,11 @@ public interface InputContext {
 
     boolean isActive();
 
-    void addKeyBinding(KeyBinding keyBinding);
+    void addKeyBinding(KeyMapping keyBinding);
 
-    List<KeyBinding> getKeyBindings();
+    List<KeyMapping> getKeyBindings();
 
-    KeyBinding getKeyBinding(InputUtil.Key key);
+    KeyMapping getKeyBinding(InputConstants.Key key);
 
     void updateKeysByCode();
 }

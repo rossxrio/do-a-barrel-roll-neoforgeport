@@ -1,10 +1,10 @@
 package nl.enjarai.doabarrelroll.mixin.client;
 
 import com.mojang.authlib.GameProfile;
-import net.minecraft.client.input.Input;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.player.ClientInput;
+import net.minecraft.client.player.LocalPlayer;
 import nl.enjarai.doabarrelroll.util.MixinHooks;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -12,24 +12,24 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ClientPlayerEntity.class)
-public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity {
-    @Shadow public Input input;
+@Mixin(LocalPlayer.class)
+public abstract class ClientPlayerEntityMixin extends AbstractClientPlayer {
+    @Shadow public ClientInput input;
 
-    public ClientPlayerEntityMixin(ClientWorld world, GameProfile profile) {
+    public ClientPlayerEntityMixin(ClientLevel world, GameProfile profile) {
         super(world, profile);
     }
 
     @Inject(
-            method = "tickMovement",
+            method = "aiStep",
             at = @At("RETURN")
     )
     public void doABarrelRoll$resetJump(CallbackInfo ci) {
-        if (isOnGround()) {
+        if (onGround()) {
             MixinHooks.secondJump = false;
             MixinHooks.thirdJump = false;
         }
 
-        MixinHooks.wasJumping = input.jumping;
+        MixinHooks.wasJumping = input.keyPresses.jump();
     }
 }
