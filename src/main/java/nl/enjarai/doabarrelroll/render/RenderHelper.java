@@ -1,26 +1,33 @@
 package nl.enjarai.doabarrelroll.render;
 
-import net.minecraft.client.render.BufferRenderer;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.util.math.MatrixStack;
-
 import java.util.function.BiConsumer;
 
-public class RenderHelper {
-    public static BiConsumer<Integer, Integer> blankPixel(MatrixStack matrices) {
-        return (x, y) -> {
-            int color = 0xffffffff;
-            var matrix = matrices.peek().getPositionMatrix();
-            var bufferBuilder = Tessellator.getInstance().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+import com.mojang.renderpearl.api.pipeline.BlendFunction;
+import com.mojang.renderpearl.api.pipeline.ColorTargetState;
+import com.mojang.renderpearl.api.pipeline.RenderPipeline;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
+import nl.enjarai.doabarrelroll.DoABarrelRoll;
 
-            //TODO: Figure out if I can just delete the nexts here?
-            bufferBuilder.vertex(matrix, (float) x, (float) y + 1, 0.0F).color(color);
-            bufferBuilder.vertex(matrix, (float) x + 1, (float) y + 1, 0.0F).color(color);
-            bufferBuilder.vertex(matrix, (float) x + 1, (float) y, 0.0F).color(color);
-            bufferBuilder.vertex(matrix, (float) x, (float) y, 0.0F).color(color);
-            BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
+public class RenderHelper {
+    /**
+     * Colour-inverting fill used for the HUD widgets, like the vanilla crosshair.
+     * NeoForge keeps {@code RenderPipelines.register} private, so this is registered through
+     * {@link RegisterRenderPipelinesEvent} instead (see {@link #registerPipelines}).
+     */
+    public static final RenderPipeline INVERTED = RenderPipeline.builder(RenderPipelines.DEBUG_FILLED_SNIPPET)
+            .withLocation(DoABarrelRoll.id("pipeline/inverted_fill"))
+            .withColorTargetState(new ColorTargetState(BlendFunction.INVERT))
+            .build();
+
+    public static void registerPipelines(RegisterRenderPipelinesEvent event) {
+        event.registerPipeline(INVERTED);
+    }
+
+    public static BiConsumer<Integer, Integer> blankPixel(GuiGraphicsExtractor drawContext) {
+        return (x, y) -> {
+            drawContext.fill(INVERTED, x, y, x + 1, y + 1, 0xffffffff);
         };
     }
 }
