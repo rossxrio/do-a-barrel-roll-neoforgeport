@@ -1,12 +1,10 @@
 package nl.enjarai.doabarrelroll.mixin.client.roll;
 
-import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalFloatRef;
-import net.minecraft.client.render.Camera;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.BlockView;
+import net.minecraft.client.Camera;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import nl.enjarai.doabarrelroll.api.RollCamera;
 import nl.enjarai.doabarrelroll.api.RollEntity;
 import nl.enjarai.doabarrelroll.math.MagicNumbers;
@@ -20,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Camera.class)
 public abstract class CameraMixin implements RollCamera {
-    @Shadow private Entity focusedEntity;
+    @Shadow private Entity entity;
 
     @Unique
     private boolean isRolling;
@@ -28,76 +26,72 @@ public abstract class CameraMixin implements RollCamera {
     private float lastRollBack;
     @Unique
     private float rollBack;
+    @Unique
+    private float appliedRoll;
+    // NeoForge patches a roll field (and setRotation(FFF)) into Camera, so we feed our roll through that.
     @Shadow
     private float roll;
+
     @Inject(
-            method = "updateEyeHeight",
+            method = "tick",
             at = @At(
                     value = "FIELD",
-                    target = "Lnet/minecraft/client/render/Camera;cameraY:F",
+                    target = "Lnet/minecraft/client/Camera;eyeHeight:F",
                     ordinal = 0
             )
     )
     private void doABarrelRoll$interpolateRollnt(CallbackInfo ci) {
-        if (!((RollEntity) focusedEntity).doABarrelRoll$isRolling()) {
+        if (!((RollEntity) entity).doABarrelRoll$isRolling()) {
             lastRollBack = rollBack;
             rollBack -= rollBack * 0.5f;
         }
     }
 
     @Inject(
-            method = "update",
+            method = "alignWithEntity",
             at = @At("HEAD")
     )
-    private void doABarrelRoll$captureTickDeltaAndUpdate(BlockView area, Entity focusedEntity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci, @Share("tickDelta") LocalFloatRef tickDeltaRef) {
+    private void doABarrelRoll$captureTickDeltaAndUpdate(float tickDelta, CallbackInfo ci, @Share("tickDelta") LocalFloatRef tickDeltaRef) {
         tickDeltaRef.set(tickDelta);
-        isRolling = ((RollEntity) focusedEntity).doABarrelRoll$isRolling();
+        isRolling = ((RollEntity) entity).doABarrelRoll$isRolling();
+        appliedRoll = 0;
     }
 
     @Inject(
-            method = "update",
+            method = "alignWithEntity",
             at = @At("TAIL")
     )
-    private void doABarrelRoll$updateRollBack(BlockView area, Entity focusedEntity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
+    private void doABarrelRoll$updateRollBack(float tickDelta, CallbackInfo ci) {
         if (isRolling) {
-            rollBack = roll;
-            lastRollBack = roll;
+            // Use the roll we applied rather than this.roll, which the mirrored camera negates.
+            rollBack = appliedRoll;
+            lastRollBack = appliedRoll;
         }
     }
 
-@ModifyArg(
-            method = "update",
+    /*
+     * NeoForge's alignWithEntity calls setRotation(yaw, pitch, roll) with the roll from
+     * ViewportEvent.ComputeCameraAngles (ordinal 0). The mirrored third-person call (ordinal 1)
+     * already passes -this.roll, so it picks our roll up without a second modification.
+     */
+    @ModifyArg(
+            method = "alignWithEntity",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/render/Camera;setRotation(FFF)V",
+                    target = "Lnet/minecraft/client/Camera;setRotation(FFF)V",
                     ordinal = 0
             ),
             index = 2
     )
-    private float doABarrelRoll$addRoll2(float original, @Share("tickDelta") LocalFloatRef tickDelta) {
+    private float doABarrelRoll$addRoll(float original, @Share("tickDelta") LocalFloatRef tickDelta) {
         if (isRolling) {
-            return original + ((RollEntity) focusedEntity).doABarrelRoll$getRoll(tickDelta.get());
+            appliedRoll = ((RollEntity) entity).doABarrelRoll$getRoll(tickDelta.get());
         } else {
-            return original + MathHelper.lerp(tickDelta.get(), lastRollBack, rollBack);
+            appliedRoll = Mth.lerp(tickDelta.get(), lastRollBack, rollBack);
         }
+        return original + appliedRoll;
     }
 
-    @ModifyArg(
-            method = "update",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/render/Camera;setRotation(FFF)V",
-                    ordinal = 1
-            ),
-            index = 2
-    )
-    private float doABarrelRoll$addRoll3(float original, @Share("tickDelta") LocalFloatRef tickDelta) {
-        if (isRolling) {
-            return original - ((RollEntity) focusedEntity).doABarrelRoll$getRoll(tickDelta.get());
-        } else {
-            return original - MathHelper.lerp(tickDelta.get(), lastRollBack, rollBack);
-        }
-    }
 
     @Override
     public float doABarrelRoll$getRoll() {
