@@ -4,10 +4,13 @@
 > [Do a Barrel Roll](https://modrinth.com/mod/do-a-barrel-roll) **3.8.3** by **enjarai**, maintained by
 > [rossxrio](https://github.com/rossxrio). Please report bugs in this port
 > [here](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/issues), not to enjarai.
+>
+> If this port is useful to you, you can support the maintainer on
+> [Buy Me a Coffee](https://buymeacoffee.com/rossxrio):
+>
+> [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-rossxrio-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/rossxrio)
 
 <img style="text-align:center" src="https://raw.githubusercontent.com/enjarai/do-a-barrel-roll/stonecutter/1.21.11/img/banner.png">
-
-[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-support%20the%20maintainer-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/rossxrio)
 
 Do a Barrel Roll is a lightweight, fully clientside mod that changes
 elytra flight to be more fun and semi-realistic.
@@ -169,15 +172,6 @@ Gradle runs on Java 21. The jar ends up in `build/libs/do_a_barrel_roll-neoforge
 - Originally ported to Forge by [MehVahdJukaar](https://github.com/MehVahdJukaar).
 - Mod icon by Mizeno.
 - NeoForge 1.21.1 port by [rossxrio](https://github.com/rossxrio).
-
-## Support the maintainer
-
-This port is maintained by [rossxrio](https://github.com/rossxrio). If it's useful to you,
-you can support the maintainer on Buy Me a Coffee:
-
-[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-rossxrio-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/rossxrio)
-
-**https://buymeacoffee.com/rossxrio**
 
 ## License
 
