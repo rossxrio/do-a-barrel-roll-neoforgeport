@@ -19,7 +19,9 @@ public abstract class LivingEntityMixin {
                     )
             ),
             at = @At("STORE"),
-            index = 21,
+            // Forge patches LivingEntity#travel (it adds a gravity attribute local), which shifts the
+            // kinetic damage float from slot 21 (vanilla 1.20.1) to slot 22. Verified with javap on 47.1.106.
+            index = 22,
             require = 0 // We let this mixin fail if it needs to as a temporary workaround to be compatible with Connector.
     )
     private float doABarrelRoll$modifyKineticDamage(float original) {
