@@ -5,11 +5,10 @@
 > to **NeoForge for Minecraft 1.20.1**, maintained by rossxrio.
 > Please report problems with this port [here](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/issues),
 > not to the original author.
->
-> This branch (`neoforge/1.20.1`) targets Minecraft 1.20.1. Other branches of this repository target other versions
-> (`main` is the NeoForge 1.21.1 port).
 
 <img style="text-align:center" src="https://raw.githubusercontent.com/enjarai/do-a-barrel-roll/stonecutter/1.21.11/img/banner.png">
+
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-support%20the%20maintainer-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/rossxrio)
 
 Do a Barrel Roll is a lightweight, fully clientside mod that changes
 elytra flight to be more fun and semi-realistic.
@@ -21,6 +20,16 @@ Some subtle and less subtle modifiers are also applied to the camera,
 including but not limited to smoothing and banking.
 
 ![](https://raw.githubusercontent.com/enjarai/do-a-barrel-roll/stonecutter/1.21.11/img/ravine.gif)
+
+## All versions of this port
+
+Each Minecraft version lives on its own branch with its own release:
+
+| Minecraft | NeoForge | Java | Branch | Download |
+|---|---|---|---|---|
+| 26.3 | 26.3.0.102 or newer | 25 | [`neoforge/26.3`](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/tree/neoforge/26.3) | [3.8.3+26.3](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/releases/tag/v3.8.3%2B26.3-neoforge) |
+| 1.21.1 | 21.1.x | 21 | [`neoforge/1.21.1`](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/tree/neoforge/1.21.1) | [3.8.3+1.21.1](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/releases/tag/release) |
+| **1.20.1** (this branch) | 47.1.x | 17 | [`neoforge/1.20.1`](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/tree/neoforge/1.20.1) | [3.8.3+1.20.1](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/releases/tag/v3.8.3%2B1.20.1-neoforge) |
 
 ## Requirements
 
@@ -146,13 +155,14 @@ Mod icon by Mizeno.
 
 NeoForge 1.20.1 port by [rossxrio](https://github.com/rossxrio).
 
-## Support the port
+## Support the maintainer
 
-If this port is useful to you, you can support my work on it:
+This port is maintained by [rossxrio](https://github.com/rossxrio). If it's useful to you,
+you can support the maintainer on Buy Me a Coffee:
 
-[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-support-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/rossxrio)
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-rossxrio-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/rossxrio)
 
-https://buymeacoffee.com/rossxrio
+**https://buymeacoffee.com/rossxrio**
 
 ## Building
 
