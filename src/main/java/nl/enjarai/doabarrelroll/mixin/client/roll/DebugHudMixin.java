@@ -19,7 +19,7 @@ public abstract class DebugHudMixin {
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/lang/String;format(Ljava/util/Locale;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
-                    ordinal = 7
+                    ordinal = 6
             ),
             index = 1,
             require = 0
@@ -39,7 +39,7 @@ public abstract class DebugHudMixin {
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/lang/String;format(Ljava/util/Locale;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
-                    ordinal = 7
+                    ordinal = 6
             ),
             index = 2,
             require = 0

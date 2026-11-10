@@ -1,7 +1,8 @@
 package nl.enjarai.doabarrelroll.mixin.client.roll;
 
-import com.llamalad7.mixinextras.injector.WrapWithCondition;
-import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalDoubleRef;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.Mouse;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -15,26 +16,43 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Mouse.class)
 public abstract class MouseMixin implements RollMouse {
     @Shadow @Final private MinecraftClient client;
+    @Shadow private double lastMouseUpdateTime;
 
     @Unique
     private final Vector2d mouseTurnVec = new Vector2d();
 
-    @Inject(
-            method = "tick",
+    @ModifyVariable(
+            method = "updateMouse",
+            index = 3,
             at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/Mouse;isCursorLocked()Z",
+                    value = "STORE",
                     ordinal = 0
             )
     )
-    private void doABarrelRoll$maintainMouseMomentum(CallbackInfo ci, @Local(ordinal = 1) double e) {
+    private double doABarrelRoll$captureDelta(double original, @Share("mouseDelta") LocalDoubleRef mouseDeltaRef) {
+        if (lastMouseUpdateTime != Double.MIN_VALUE) {
+            mouseDeltaRef.set(original);
+        }
+
+        return original;
+    }
+
+    @Inject(
+            method = "updateMouse",
+            at = @At(
+                    value = "RETURN",
+                    ordinal = 0
+            )
+    )
+    private void doABarrelRoll$maintainMouseMomentum(CallbackInfo ci, @Share("mouseDelta") LocalDoubleRef mouseDeltaRef) {
         if (client.player != null && !client.isPaused()) {
-            doABarrelRoll$updateMouse(client.player, 0, 0, e);
+            doABarrelRoll$updateMouse(client.player, 0, 0, mouseDeltaRef.get());
         }
     }
 
@@ -45,8 +63,8 @@ public abstract class MouseMixin implements RollMouse {
                     target = "Lnet/minecraft/client/network/ClientPlayerEntity;changeLookDirection(DD)V"
             )
     )
-    private boolean doABarrelRoll$changeLookDirection(ClientPlayerEntity player, double cursorDeltaX, double cursorDeltaY, @Local(argsOnly = true) double timeDelta) {
-        return !doABarrelRoll$updateMouse(player, cursorDeltaX, cursorDeltaY, timeDelta);
+    private boolean doABarrelRoll$changeLookDirection(ClientPlayerEntity player, double cursorDeltaX, double cursorDeltaY, @Share("mouseDelta") LocalDoubleRef mouseDeltaRef) {
+        return !doABarrelRoll$updateMouse(player, cursorDeltaX, cursorDeltaY, mouseDeltaRef.get());
     }
 
     @Override

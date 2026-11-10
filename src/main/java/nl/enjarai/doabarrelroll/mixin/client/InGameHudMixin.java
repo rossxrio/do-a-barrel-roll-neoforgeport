@@ -1,16 +1,20 @@
 package nl.enjarai.doabarrelroll.mixin.client;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
-import net.minecraft.client.render.RenderTickCounter;
 import nl.enjarai.doabarrelroll.EventCallbacksClient;
-import nl.enjarai.doabarrelroll.util.StarFoxUtil;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+/**
+ * Forge renders the HUD through ForgeGui's overlay list instead of {@code InGameHud#render}, but its
+ * crosshair overlay still calls {@code InGameHud#renderCrosshair}, so the flight widgets hook in there.
+ * The matrix push/pop lets the momentum widget offset the vanilla crosshair drawn in between.
+ * The Star Fox easter egg is registered as a separate Forge overlay in DoABarrelRollClientInitializer.
+ */
 @Mixin(InGameHud.class)
 public abstract class InGameHudMixin {
     @Inject(
@@ -19,9 +23,10 @@ public abstract class InGameHudMixin {
                     value = "HEAD"
             )
     )
-    private void doABarrelRoll$captureTickDelta(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
+    private void doABarrelRoll$renderCrosshairHead(DrawContext context, CallbackInfo ci) {
         context.getMatrices().push();
-        EventCallbacksClient.onRenderCrosshair(context, tickCounter, context.getScaledWindowWidth(), context.getScaledWindowHeight());
+        EventCallbacksClient.onRenderCrosshair(context, MinecraftClient.getInstance().getTickDelta(),
+                context.getScaledWindowWidth(), context.getScaledWindowHeight());
     }
 
     @Inject(
@@ -30,18 +35,7 @@ public abstract class InGameHudMixin {
                     value = "RETURN"
             )
     )
-    private void doABarrelRoll$renderCrosshairReturn(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
+    private void doABarrelRoll$renderCrosshairReturn(DrawContext context, CallbackInfo ci) {
         context.getMatrices().pop();
-    }
-
-    @Inject(
-            method = "render",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/neoforged/neoforge/client/gui/GuiLayerManager;render(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/client/render/RenderTickCounter;)V"
-            )
-    )
-    private void doABarrelRoll$renderPeppy(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
-        StarFoxUtil.renderPeppy(context, tickCounter.getTickDelta(false), context.getScaledWindowWidth(), context.getScaledWindowHeight());
     }
 }
