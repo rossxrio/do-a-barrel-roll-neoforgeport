@@ -1,28 +1,60 @@
-# NOT ORIGINAL MOD THIS A PORT TO NEOFORGE MADE BY ME
+# Do a Barrel Roll for NeoForge 1.21.1 (unofficial port)
+
+> **This is not the original mod.** It is an unofficial, native NeoForge port of
+> [Do a Barrel Roll](https://modrinth.com/mod/do-a-barrel-roll) **3.8.3** by **enjarai**, maintained by
+> [rossxrio](https://github.com/rossxrio). Please report bugs in this port
+> [here](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/issues), not to enjarai.
 
 <img style="text-align:center" src="https://raw.githubusercontent.com/enjarai/do-a-barrel-roll/stonecutter/1.21.11/img/banner.png">
 
-[<img alt="discord-plural" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/social/discord-plural_vector.svg">](https://discord.gg/WcYsDDQtyR)
-[<img alt="kofi-singular" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/donate/kofi-singular_vector.svg">](https://ko-fi.com/enjarai)
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-support%20the%20maintainer-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/rossxrio)
 
-**On Fabric:**
-
-[<img alt="fabric-api" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/requires/fabric-api_vector.svg">](https://modrinth.com/mod/fabric-api)
-[<img alt="fabric-api" height="56" src="https://enjarai.dev/static/requires_cicada_cozy.svg">](https://modrinth.com/mod/cicada)
-
-[![Modrinth](https://img.shields.io/modrinth/dt/do-a-barrel-roll)](https://modrinth.com/mod/do-a-barrel-roll)
-[![CurseForge](https://cf.way2muchnoise.eu/full_663658_downloads.svg)](https://curseforge.com/minecraft/mc-mods/do-a-barrel-roll)
-
-Do a Barrel Roll is a lightweight, fully clientside mod that changes 
+Do a Barrel Roll is a lightweight, fully clientside mod that changes
 elytra flight to be more fun and semi-realistic.
-It achieves this by redesigning movement with a 
-completely unlocked camera orientation in mind, 
+It achieves this by redesigning movement with a
+completely unlocked camera orientation in mind,
 allowing for full pitch, yaw and roll control in flight.
 
 Some subtle and less subtle modifiers are also applied to the camera,
 including but not limited to smoothing and banking.
 
 ![](https://raw.githubusercontent.com/enjarai/do-a-barrel-roll/stonecutter/1.21.11/img/ravine.gif)
+
+## All versions of this port
+
+Each Minecraft version lives on its own branch with its own release:
+
+| Minecraft | NeoForge | Java | Branch | Download |
+|---|---|---|---|---|
+| 26.3 | 26.3.0.102 or newer | 25 | [`neoforge/26.3`](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/tree/neoforge/26.3) | [3.8.3+26.3](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/releases/tag/v3.8.3%2B26.3-neoforge) |
+| **1.21.1** (this branch) | 21.1.x | 21 | [`neoforge/1.21.1`](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/tree/neoforge/1.21.1) | [3.8.3+1.21.1](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/releases/tag/release) |
+| 1.20.1 | 47.1.x | 17 | [`neoforge/1.20.1`](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/tree/neoforge/1.20.1) | [3.8.3+1.20.1](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/releases/tag/v3.8.3%2B1.20.1-neoforge) |
+
+## Requirements
+
+| | Version |
+|---|---|
+| Minecraft | 1.21.1 |
+| [NeoForge](https://neoforged.net/) | 21.1.x |
+| Java | 21 |
+| [YACL](https://modrinth.com/mod/yacl/versions?g=1.21.1&l=neoforge) | **Optional**, 3.8.1+1.21.1-neoforge recommended, only for the in-game config screen |
+
+This is a native NeoForge build: it does **not** need Forgified Fabric API, Sinytra Connector, Cicada or
+any other Fabric compatibility layer.
+
+Without YACL the mod works normally: your settings are read from `config/do_a_barrel_roll-client.json`
+and the server settings from `config/do_a_barrel_roll-server.json`.
+
+## Installation
+
+1. Install NeoForge 21.1.x for Minecraft 1.21.1 with the installer from [neoforged.net](https://neoforged.net/).
+2. Download `do_a_barrel_roll-neoforge-3.8.3+1.21.1.jar` from the
+   [releases page](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/releases/tag/release).
+3. Put the jar in the `mods` folder of your game directory (and of your server, if you want the
+   server-side features below).
+4. Optional: put YACL for NeoForge 1.21.1 in `mods` as well to get the in-game config screen.
+   YACL is not needed on the server.
+5. Start the game.
 
 ## Controls
 
@@ -34,18 +66,17 @@ The default controls are as follows, but can be modified:
 
 ## Configuration
 
-The mod can be configured in-game using [ModMenu](https://modrinth.com/mod/modmenu) and [YACL](https://modrinth.com/mod/yacl).
-Once you install both of these,
-you can access the config screen by finding the mod in the mods list and pressing the config button.
+The mod can be configured in-game with [YACL](https://modrinth.com/mod/yacl/versions?g=1.21.1&l=neoforge) installed:
+open the NeoForge mods list, select Do a Barrel Roll and press "Config".
 
 A wide range of options are available, including custom mouse behavior, elytra activation restrictions and
 changing values of modifiers like banking, sensitivity and more.
 
 ## Server-side features
 
-Visual aspects of the mod (playermodel roll in particular) can be synced between 
-clients by installing it on the server-side as well. 
-Everything is still fully compatible with both vanilla clients and servers. 
+Visual aspects of the mod (playermodel roll in particular) can be synced between
+clients by installing it on the server-side as well.
+Everything is still fully compatible with both vanilla clients and servers.
 All the following configurations are valid:
 
 - Server with mod, client with mod: visuals are synced
@@ -58,53 +89,32 @@ All the following configurations are valid:
 
 ## Disclaimers
 
-This mod does not actually modify the flight physics themselves, 
-so in most cases it shouldn't trigger anticheat. 
+This mod does not actually modify the flight physics themselves,
+so in most cases it shouldn't trigger anticheat.
 However, doing things like loop de loops looks to the server like rapid camera movement
 and may get you flagged.
 **Use at your own risk.**
-
-**Versions prior to 2.8.3 may not be suitable for use on multiplayer servers due to lax server-side restrictions**
-
-## Credits
-
-Based on the [Cool Elytra Roll](https://github.com/Jorbon/cool_elytra) mod by [Jorbon](https://github.com/Jorbon),
-specifically it's "realistic mode".
-
-Originally ported to Forge by [MehVahdJukaar](https://github.com/MehVahdJukaar).
-
-Mod icon by Mizeno.
 
 ## For server admins
 
 ### Thrusting
 
-The mod includes a "thrusting" feature that is probably considered cheating by most servers, 
+The mod includes a "thrusting" feature that is probably considered cheating by most servers,
 as it lets users accelerate without using fireworks.
 
-**This feature is disabled by default on servers as of 2.8.3.**
+**This feature is disabled by default on servers.**
 
-If you want to allow players to use this feature on your server you can, 
-depending on your server platform, use one of the methods below.
-These configurations will be respected by any clients using version 2.4.0 or later of the mod.
-The pre-1.20 Forge versions do not support thrusting and other server-side featuers, 
-so they will not be affected by any of these options.
+If you want to allow players to use this feature on your server, install the mod on the server and,
+while in the world, use the "Server" tab on the config screen to configure it (recommended).
 
-#### For Fabric and Forge servers
-
-Fabric or Forge server owners can install the mod on their server and, while in the world, use the "Server" tab on the config screen to configure it. (recommended)
 - This tab is only available to level 3 server operators and players with the `do_a_barrel_roll.configure` permission.
 - You can also set values manually in `config/do_a_barrel_roll-server.json`
   to configure the mod without a client.
 
-#### For Bukkit/Spigot servers
+On platforms that support Bukkit plugins, you can use the [DABRCS](https://modrinth.com/plugin/dabrcs/) plugin
+to configure the mod (a third-party creation endorsed by enjarai).
 
-On platforms that support Bukkit plugins, you can use the [DABRCS](https://modrinth.com/plugin/dabrcs/) plugin to configure the mod.
-- While this is a third-party creation, it is officially endorsed by me.
-
-#### For other server platforms
-
-On servers that have no official support, you'll have to create a custom plugin or mod to send a packet to the client at login on 
+On other platforms without the mod, a custom plugin or mod can send a packet to the client at login on
 the `do_a_barrel_roll:handshake` channel with the following layout:
 
 | Type    | Value                      |
@@ -128,8 +138,47 @@ The server config includes a few other features to configure server-side behavio
 - `installedTimeout`: The amount of time (in ticks) to wait for a client to respond to the `do_a_barrel_roll:config_sync` packet.
   - If the client does not respond in time, and `forceInstalled` is set to `true`, they will be kicked from the server.
   - You may want to increase this value if players with bad connections are getting kicked despite having the mod installed.
+- `kineticDamage`: How much damage flying into a wall does. One of `VANILLA`, `HIGH_SPEED`, `NONE` or `INSTANT_KILL`.
 
 These options can all be configured via the same methods as the `allowThrusting` option.
 
-It is also possible to allow specific players to bypass configured restrictions by giving them level 2 operator status 
-or the `do_a_barrel_roll.ignore_config` permission.
+### Permissions
+
+Players can bypass the configured restrictions with level 2 operator status or the
+`do_a_barrel_roll.ignore_config` permission, and edit the server config with level 3 operator status or the
+`do_a_barrel_roll.configure` permission. Both are registered as NeoForge permission nodes, so permission
+mods that hook into NeoForge's permission API (for example LuckPerms) can grant them; without one, the
+operator levels above apply.
+
+## Building
+
+```sh
+./gradlew build
+```
+
+Gradle runs on Java 21. The jar ends up in `build/libs/do_a_barrel_roll-neoforge-3.8.3+1.21.1.jar`.
+
+## Credits
+
+- **[enjarai](https://github.com/enjarai)**: original author of Do a Barrel Roll. All the flight
+  mechanics, rendering and design are theirs. Support the original:
+  [Modrinth](https://modrinth.com/mod/do-a-barrel-roll), [CurseForge](https://curseforge.com/minecraft/mc-mods/do-a-barrel-roll),
+  [Ko-fi](https://ko-fi.com/enjarai), [Discord](https://discord.gg/WcYsDDQtyR).
+- Based on the [Cool Elytra Roll](https://github.com/Jorbon/cool_elytra) mod by [Jorbon](https://github.com/Jorbon),
+  specifically its "realistic mode".
+- Originally ported to Forge by [MehVahdJukaar](https://github.com/MehVahdJukaar).
+- Mod icon by Mizeno.
+- NeoForge 1.21.1 port by [rossxrio](https://github.com/rossxrio).
+
+## Support the maintainer
+
+This port is maintained by [rossxrio](https://github.com/rossxrio). If it's useful to you,
+you can support the maintainer on Buy Me a Coffee:
+
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-rossxrio-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/rossxrio)
+
+**https://buymeacoffee.com/rossxrio**
+
+## License
+
+GPL-3.0, like the original mod. See [LICENSE](LICENSE).
