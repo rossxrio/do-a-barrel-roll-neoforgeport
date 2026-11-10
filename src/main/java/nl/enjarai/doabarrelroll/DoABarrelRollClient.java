@@ -1,9 +1,11 @@
 package nl.enjarai.doabarrelroll;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.math.Smoother;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraft.client.util.SmoothUtil;
+import net.minecraftforge.client.event.ViewportEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TickEvent;
+import nl.enjarai.doabarrelroll.api.RollCamera;
 import nl.enjarai.doabarrelroll.api.event.ClientEvents;
 import nl.enjarai.doabarrelroll.api.event.RollEvents;
 import nl.enjarai.doabarrelroll.api.event.RollGroup;
@@ -16,9 +18,9 @@ import nl.enjarai.doabarrelroll.util.MixinHooks;
 import nl.enjarai.doabarrelroll.util.StarFoxUtil;
 
 public class DoABarrelRollClient {
-    public static final Smoother PITCH_SMOOTHER = new Smoother();
-    public static final Smoother YAW_SMOOTHER = new Smoother();
-    public static final Smoother ROLL_SMOOTHER = new Smoother();
+    public static final SmoothUtil PITCH_SMOOTHER = new SmoothUtil();
+    public static final SmoothUtil YAW_SMOOTHER = new SmoothUtil();
+    public static final SmoothUtil ROLL_SMOOTHER = new SmoothUtil();
     public static final RollGroup FALL_FLYING_GROUP = RollGroup.of(DoABarrelRoll.id("fall_flying"));
 
     public static void init() {
@@ -55,7 +57,16 @@ public class DoABarrelRollClient {
 
         ClientNetworking.init();
 
-        NeoForge.EVENT_BUS.addListener(ClientTickEvent.Post.class, event -> EventCallbacksClient.clientTick(MinecraftClient.getInstance()));
+        MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent event) -> {
+            if (event.phase == TickEvent.Phase.END) {
+                EventCallbacksClient.clientTick(MinecraftClient.getInstance());
+            }
+        });
+
+        // Apply the camera roll to the world render. Forge already rotates the view by this roll right before
+        // the pitch and yaw rotations, which is exactly where upstream's GameRendererMixin injects on vanilla.
+        MinecraftForge.EVENT_BUS.addListener((ViewportEvent.ComputeCameraAngles event) ->
+                event.setRoll(event.getRoll() + ((RollCamera) event.getCamera()).doABarrelRoll$getRoll()));
 
         // Keybindings are registered in DoABarrelRollClientInitializer via RegisterKeyMappingsEvent.
     }

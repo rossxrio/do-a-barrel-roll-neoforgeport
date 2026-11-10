@@ -1,8 +1,8 @@
 package nl.enjarai.doabarrelroll.util;
 
 import net.minecraft.client.gui.screen.Screen;
-import net.neoforged.neoforge.client.event.ScreenEvent;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraftforge.common.MinecraftForge;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 /**
- * NeoForge stand-in for Fabric's {@code ScreenEvents.remove(screen)}: runs callbacks when a specific screen is closed.
+ * Forge stand-in for Fabric's {@code ScreenEvents.remove(screen)}: runs callbacks when a specific screen is closed.
  */
 public final class ScreenCloseCallbacks {
     private static final Map<Screen, List<Runnable>> CALLBACKS = new WeakHashMap<>();
@@ -22,7 +22,7 @@ public final class ScreenCloseCallbacks {
     public static void register(Screen screen, Runnable callback) {
         if (!listening) {
             listening = true;
-            NeoForge.EVENT_BUS.addListener(ScreenEvent.Closing.class, ScreenCloseCallbacks::onClosing);
+            MinecraftForge.EVENT_BUS.addListener(ScreenCloseCallbacks::onClosing);
         }
         CALLBACKS.computeIfAbsent(screen, s -> new ArrayList<>()).add(callback);
     }

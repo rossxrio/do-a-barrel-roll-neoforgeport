@@ -8,7 +8,7 @@ import nl.enjarai.doabarrelroll.config.LimitedModConfigServer;
 import nl.enjarai.doabarrelroll.config.ModConfig;
 import nl.enjarai.doabarrelroll.config.ModConfigScreen;
 import nl.enjarai.doabarrelroll.net.ClientNetworking;
-import net.neoforged.neoforge.client.settings.IKeyConflictContext;
+import net.minecraftforge.client.settings.IKeyConflictContext;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;

@@ -1,6 +1,6 @@
 package nl.enjarai.doabarrelroll.compat;
 
-import net.neoforged.fml.ModList;
+import net.minecraftforge.fml.ModList;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 
 public class Compat {
