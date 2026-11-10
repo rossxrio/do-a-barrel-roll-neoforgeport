@@ -8,7 +8,7 @@
 
 <img style="text-align:center" src="https://raw.githubusercontent.com/enjarai/do-a-barrel-roll/stonecutter/1.21.11/img/banner.png">
 
-[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-support%20the%20port-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/rossxrio)
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-support%20the%20maintainer-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/rossxrio)
 
 Do a Barrel Roll is a lightweight, fully clientside mod that changes
 elytra flight to be more fun and semi-realistic.
@@ -25,7 +25,17 @@ including but not limited to smoothing and banking.
 
 This branch (`neoforge/26.3`) is a native NeoForge build of Do a Barrel Roll 3.8.3 for Minecraft 26.3.
 It does **not** need Forgified Fabric API, Sinytra Connector, Cicada or any other Fabric compatibility layer.
-A NeoForge 1.21.1 build lives on the `neoforge/1.21.1` branch.
+Builds for other Minecraft versions are listed below.
+
+### All versions of this port
+
+Each Minecraft version lives on its own branch with its own release:
+
+| Minecraft | NeoForge | Java | Branch | Download |
+|---|---|---|---|---|
+| **26.3** (this branch) | 26.3.0.102 or newer | 25 | [`neoforge/26.3`](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/tree/neoforge/26.3) | [3.8.3+26.3](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/releases/tag/v3.8.3%2B26.3-neoforge) |
+| 1.21.1 | 21.1.x | 21 | [`neoforge/1.21.1`](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/tree/neoforge/1.21.1) | [3.8.3+1.21.1](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/releases/tag/release) |
+| 1.20.1 | 47.1.x | 17 | [`neoforge/1.20.1`](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/tree/neoforge/1.20.1) | [3.8.3+1.20.1](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/releases/tag/v3.8.3%2B1.20.1-neoforge) |
 
 ### Requirements
 
@@ -171,13 +181,14 @@ operator levels above apply.
 - Mod icon by Mizeno.
 - NeoForge 26.3 port by [rossxrio](https://github.com/rossxrio), based on enjarai's upstream 26.3 source.
 
-## Support
+## Support the maintainer
 
-If this port is useful to you, you can support its maintenance here:
+This port is maintained by [rossxrio](https://github.com/rossxrio). If it's useful to you,
+you can support the maintainer on Buy Me a Coffee:
 
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-rossxrio-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/rossxrio)
 
-https://buymeacoffee.com/rossxrio
+**https://buymeacoffee.com/rossxrio**
 
 ## License
 
