@@ -2,7 +2,7 @@ modLoader = "javafml"
 loaderVersion = "[4,)"
 license = "GPL-3.0"
 
-issueTrackerURL = "https://github.com/enjarai/do-a-barrel-roll/issues"
+issueTrackerURL = "https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/issues"
 
 [[mods]]
 modId = "do_a_barrel_roll"
