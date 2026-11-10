@@ -27,7 +27,7 @@ Each Minecraft version lives on its own branch with its own release:
 | Minecraft | NeoForge | Java | Branch | Download |
 |---|---|---|---|---|
 | 26.3 | 26.3.0.102 or newer | 25 | [`neoforge/26.3`](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/tree/neoforge/26.3) | [3.8.3+26.3](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/releases/tag/v3.8.3%2B26.3-neoforge) |
-| **1.21.1** (this branch) | 21.1.x | 21 | [`neoforge/1.21.1`](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/tree/neoforge/1.21.1) | [3.8.3+1.21.1](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/releases/tag/release) |
+| **1.21.1** (this branch) | 21.1.x | 21 | [`neoforge/1.21.1`](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/tree/neoforge/1.21.1) | [3.8.3+1.21.1](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/releases/tag/v3.8.3%2B1.21.1-neoforge) |
 | 1.20.1 | 47.1.x | 17 | [`neoforge/1.20.1`](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/tree/neoforge/1.20.1) | [3.8.3+1.20.1](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/releases/tag/v3.8.3%2B1.20.1-neoforge) |
 
 ## Requirements
@@ -49,7 +49,7 @@ and the server settings from `config/do_a_barrel_roll-server.json`.
 
 1. Install NeoForge 21.1.x for Minecraft 1.21.1 with the installer from [neoforged.net](https://neoforged.net/).
 2. Download `do_a_barrel_roll-neoforge-3.8.3+1.21.1.jar` from the
-   [releases page](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/releases/tag/release).
+   [releases page](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/releases/tag/v3.8.3%2B1.21.1-neoforge).
 3. Put the jar in the `mods` folder of your game directory (and of your server, if you want the
    server-side features below).
 4. Optional: put YACL for NeoForge 1.21.1 in `mods` as well to get the in-game config screen.
