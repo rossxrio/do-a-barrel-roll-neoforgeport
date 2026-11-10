@@ -1,7 +1,6 @@
 package nl.enjarai.doabarrelroll.net;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -59,7 +58,9 @@ public class HandshakeServer<P extends ConfigSyncS2CPacket> {
         getHandshakeState(handler).isLimited = isLimited;
         var config = configHolder.instance;
 
-        return packetConstructor.construct(PROTOCOL_VERSION, config, isLimited, isLimited ? ModConfigServer.DEFAULT : config);
+        // Players with the ignore_config permission (or op level 2) get the unrestricted OPERATOR view,
+        // as documented in the README. Upstream 3.7+ sent the raw config here, which made that permission a no-op.
+        return packetConstructor.construct(PROTOCOL_VERSION, config.getLimited(handler), isLimited, isLimited ? ModConfigServer.DEFAULT : config);
     }
 
     public void configSentToClient(ServerPlayNetworkHandler handler) {
