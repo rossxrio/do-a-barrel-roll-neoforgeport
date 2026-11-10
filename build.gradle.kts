@@ -8,6 +8,8 @@ val modId = property("mod.id").toString()
 val modVersion = property("mod.version").toString()
 val mcVersion = property("mod.mc_version").toString()
 val mcDep = property("mod.mc_dep").toString()
+val neoforgeDep = property("deps.neoforge_dep").toString()
+val mixinExtras = property("deps.mixinextras").toString()
 
 version = "$modVersion+$mcVersion"
 group = property("mod.group").toString()
@@ -22,16 +24,19 @@ repositories {
 
 dependencies {
     minecraft("com.mojang:minecraft:$mcVersion")
-    @Suppress("UnstableApiUsage")
-    mappings(loom.layered {
-        mappings("net.fabricmc:yarn:$mcVersion+build.${property("deps.yarn_build")}:v2")
-        mappings("dev.architectury:yarn-mappings-patch-neoforge:${property("deps.yarn_patch")}")
-    })
-    "neoForge"("net.neoforged:neoforge:${property("deps.neoforge")}")
+    mappings("net.fabricmc:yarn:${property("deps.yarn")}:v2")
+    // NeoForge for 1.20.1 is published as the legacy Forge artifact.
+    "forge"("net.neoforged:forge:$mcVersion-${property("deps.neoforge")}")
+
+    // Forge 47 does not ship MixinExtras, so it is bundled as a jar-in-jar.
+    compileOnly("io.github.llamalad7:mixinextras-common:$mixinExtras")
+    annotationProcessor("io.github.llamalad7:mixinextras-common:$mixinExtras")
+    implementation("io.github.llamalad7:mixinextras-forge:$mixinExtras")
+    include("io.github.llamalad7:mixinextras-forge:$mixinExtras")
 
     // YACL is optional at runtime; the config screen falls back to a download prompt without it.
-    modCompileOnly("dev.isxander:yet-another-config-lib:${property("deps.yacl")}-neoforge")
-    modLocalRuntime("dev.isxander:yet-another-config-lib:${property("deps.yacl")}-neoforge")
+    modCompileOnly("dev.isxander:yet-another-config-lib:${property("deps.yacl")}")
+    modLocalRuntime("dev.isxander:yet-another-config-lib:${property("deps.yacl")}")
     // YACL jar-in-jars these in production; the dev runtime needs them explicitly.
     listOf(
         "org.quiltmc.parsers:json:0.2.1",
@@ -46,6 +51,16 @@ dependencies {
 }
 
 loom {
+    forge {
+        mixinConfig("$modId.mixins.json")
+    }
+
+    // No refmap: Loom's tiny-remapper mixin extension rewrites the mixin targets to SRG names in remapJar.
+    @Suppress("UnstableApiUsage")
+    mixin {
+        useLegacyMixinAp = false
+    }
+
     runConfigs.all {
         ideConfigGenerated(true)
         vmArgs("-Dmixin.debug.export=true")
@@ -56,17 +71,12 @@ loom {
     findProperty("quickPlay")?.let { world ->
         runConfigs.named("client") { programArgs("--quickPlaySingleplayer", world.toString()) }
     }
-
-    @Suppress("UnstableApiUsage")
-    mixin {
-        useLegacyMixinAp = false
-    }
 }
 
 tasks.processResources {
-    val map = mapOf("version" to modVersion, "mc" to mcDep)
+    val map = mapOf("version" to modVersion, "mc" to mcDep, "neoforge" to neoforgeDep)
     inputs.properties(map)
-    filesMatching("META-INF/neoforge.mods.toml") { expand(map) }
+    filesMatching("META-INF/mods.toml") { expand(map) }
 }
 
 yamlang {
@@ -76,10 +86,11 @@ yamlang {
 
 java {
     withSourcesJar()
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    // Loom itself needs a Java 21 Gradle JVM, but the mod targets (and the dev runs use) Java 17 like Minecraft 1.20.1.
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
 tasks.withType<JavaCompile>().configureEach {
-    options.release.set(21)
+    options.encoding = "UTF-8"
+    options.release.set(17)
 }
