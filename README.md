@@ -28,7 +28,7 @@ Each Minecraft version lives on its own branch with its own release:
 | Minecraft | NeoForge | Java | Branch | Download |
 |---|---|---|---|---|
 | 26.3 | 26.3.0.102 or newer | 25 | [`neoforge/26.3`](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/tree/neoforge/26.3) | [3.8.3+26.3](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/releases/tag/v3.8.3%2B26.3-neoforge) |
-| 1.21.1 | 21.1.x | 21 | [`neoforge/1.21.1`](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/tree/neoforge/1.21.1) | [3.8.3+1.21.1](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/releases/tag/release) |
+| 1.21.1 | 21.1.x | 21 | [`neoforge/1.21.1`](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/tree/neoforge/1.21.1) | [3.8.3+1.21.1](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/releases/tag/v3.8.3%2B1.21.1-neoforge) |
 | **1.20.1** (this branch) | 47.1.x | 17 | [`neoforge/1.20.1`](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/tree/neoforge/1.20.1) | [3.8.3+1.20.1](https://github.com/rossxrio/do-a-barrel-roll-neoforgeport/releases/tag/v3.8.3%2B1.20.1-neoforge) |
 
 ## Requirements
