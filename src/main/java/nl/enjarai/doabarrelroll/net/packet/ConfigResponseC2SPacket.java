@@ -1,21 +1,14 @@
 package nl.enjarai.doabarrelroll.net.packet;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.network.packet.CustomPayload;
-import nl.enjarai.doabarrelroll.DoABarrelRoll;
+import net.minecraft.network.PacketByteBuf;
 
-public record ConfigResponseC2SPacket(int protocolVersion, boolean success) implements CustomPayload {
-    public static final Id<ConfigResponseC2SPacket> PACKET_ID = new Id<>(DoABarrelRoll.id("config_response"));
-    public static final PacketCodec<ByteBuf, ConfigResponseC2SPacket> PACKET_CODEC = PacketCodec.tuple(
-            PacketCodecs.INTEGER, ConfigResponseC2SPacket::protocolVersion,
-            PacketCodecs.BOOL, ConfigResponseC2SPacket::success,
-            ConfigResponseC2SPacket::new
-    );
+public record ConfigResponseC2SPacket(int protocolVersion, boolean success) {
+    public void write(PacketByteBuf buf) {
+        buf.writeInt(protocolVersion);
+        buf.writeBoolean(success);
+    }
 
-    @Override
-    public Id<? extends CustomPayload> getId() {
-        return PACKET_ID;
+    public static ConfigResponseC2SPacket read(PacketByteBuf buf) {
+        return new ConfigResponseC2SPacket(buf.readInt(), buf.readBoolean());
     }
 }

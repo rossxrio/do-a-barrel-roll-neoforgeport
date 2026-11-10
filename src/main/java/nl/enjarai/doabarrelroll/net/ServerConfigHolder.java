@@ -51,7 +51,7 @@ public class ServerConfigHolder<P extends ConfigUpdateAckS2CPacket> {
             )) {
                 // Parses the config file and puts the values into config object
                 config = codec.decode(JsonOps.INSTANCE, JsonParser.parseReader(fileReader))
-                        .getOrThrow(e -> {
+                        .getOrThrow(false, e -> {
                             throw new RuntimeException(e);
                         })
                         .getFirst();
@@ -75,7 +75,7 @@ public class ServerConfigHolder<P extends ConfigUpdateAckS2CPacket> {
             Files.createDirectories(configFile.getParent());
             // Writes the config to the file
             Files.writeString(configFile, GSON.toJson(codec.encodeStart(JsonOps.INSTANCE, instance)
-                    .getOrThrow(e -> {
+                    .getOrThrow(false, e -> {
                         throw new RuntimeException(e);
                     })), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException | RuntimeException e) {

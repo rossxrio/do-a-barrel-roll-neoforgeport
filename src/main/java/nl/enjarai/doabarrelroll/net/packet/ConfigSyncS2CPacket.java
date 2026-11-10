@@ -1,25 +1,23 @@
 package nl.enjarai.doabarrelroll.net.packet;
 
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.network.packet.CustomPayload;
-import nl.enjarai.doabarrelroll.DoABarrelRoll;
 import nl.enjarai.doabarrelroll.config.LimitedModConfigServer;
 import nl.enjarai.doabarrelroll.config.ModConfigServer;
 
-public record ConfigSyncS2CPacket(int protocolVersion, LimitedModConfigServer applicableConfig, boolean isLimited, ModConfigServer fullConfig) implements CustomPayload {
-    public static final Id<ConfigSyncS2CPacket> PACKET_ID = new Id<>(DoABarrelRoll.id("config_sync"));
-    public static final PacketCodec<PacketByteBuf, ConfigSyncS2CPacket> PACKET_CODEC = PacketCodec.tuple(
-            PacketCodecs.INTEGER, ConfigSyncS2CPacket::protocolVersion,
-            LimitedModConfigServer.getPacketCodec(), ConfigSyncS2CPacket::applicableConfig,
-            PacketCodecs.BOOL, ConfigSyncS2CPacket::isLimited,
-            ModConfigServer.PACKET_CODEC, ConfigSyncS2CPacket::fullConfig,
-            ConfigSyncS2CPacket::new
-    );
+public record ConfigSyncS2CPacket(int protocolVersion, LimitedModConfigServer applicableConfig, boolean isLimited, ModConfigServer fullConfig) {
+    public void write(PacketByteBuf buf) {
+        buf.writeInt(protocolVersion);
+        LimitedModConfigServer.write(buf, applicableConfig);
+        buf.writeBoolean(isLimited);
+        fullConfig.write(buf);
+    }
 
-    @Override
-    public Id<? extends CustomPayload> getId() {
-        return PACKET_ID;
+    public static ConfigSyncS2CPacket read(PacketByteBuf buf) {
+        return new ConfigSyncS2CPacket(
+                buf.readInt(),
+                LimitedModConfigServer.read(buf),
+                buf.readBoolean(),
+                ModConfigServer.read(buf)
+        );
     }
 }

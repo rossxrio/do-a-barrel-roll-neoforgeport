@@ -1,12 +1,10 @@
 package nl.enjarai.doabarrelroll.net;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.math.MathHelper;
-import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.network.NetworkEvent;
 import nl.enjarai.doabarrelroll.api.RollEntity;
 import nl.enjarai.doabarrelroll.api.event.ClientEvents;
 import nl.enjarai.doabarrelroll.config.ModConfigServer;
@@ -22,12 +20,12 @@ public class ClientNetworking {
     );
 
     public static void init() {
-        // Payload handlers are registered in ServerNetworking#registerPayloads and delegate to the methods below.
-        NeoForge.EVENT_BUS.addListener(ClientPlayerNetworkEvent.LoggingOut.class, event -> HANDSHAKE_CLIENT.reset());
+        // Packet handlers are registered in ServerNetworking#registerPackets and delegate to the methods below.
+        MinecraftForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggingOut event) -> HANDSHAKE_CLIENT.reset());
     }
 
-    static void onConfigSync(ConfigSyncS2CPacket payload, IPayloadContext context) {
-        context.reply(HANDSHAKE_CLIENT.handleConfigSync(payload));
+    static void onConfigSync(ConfigSyncS2CPacket payload, NetworkEvent.Context context) {
+        ServerNetworking.CHANNEL.reply(HANDSHAKE_CLIENT.handleConfigSync(payload), context);
     }
 
     static void onRollSync(RollSyncS2CPacket payload) {
@@ -54,10 +52,10 @@ public class ClientNetworking {
         CONFIG_UPDATE_CLIENT.updateAcknowledged(payload);
     }
 
-    private static void send(CustomPayload payload) {
+    private static void send(Object payload) {
         var handler = MinecraftClient.getInstance().getNetworkHandler();
-        if (handler != null && handler.hasChannel(payload.getId())) {
-            PacketDistributor.sendToServer(payload);
+        if (handler != null && ServerNetworking.CHANNEL.isRemotePresent(handler.getConnection())) {
+            ServerNetworking.CHANNEL.sendToServer(payload);
         }
     }
 
